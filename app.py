@@ -4,7 +4,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class AI_Chatbot:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small")  # Switched to smaller model
+        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small", padding_side='left')  # Set padding side
         self.model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
 
     def get_response(self, user_input):
