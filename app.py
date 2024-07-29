@@ -8,11 +8,41 @@ class AI_Chatbot:
         self.model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
 
     def get_response(self, user_input):
+        user_input_lower = user_input.lower()
+        
+        # Predefined responses
+        if "best dish" in user_input_lower:
+            return "The top-selling dish at our restaurant is the Masala Dosa. It's a favorite among our customers!"
+        elif "menu" in user_input_lower:
+            return ("Here are some of our menu items:\n"
+                    "- Appetizers: Chilli Baby Corn, Chilli Paneer, Chilli Gobi, etc.\n"
+                    "- Main Dishes: Plain Dosa, Masala Dosa, Pongal, etc.\n"
+                    "- Chaat & Pakoda: Samosa Chaat, Pani Puri, Sev Puri, etc.")
+        elif "opening hours" in user_input_lower:
+            return "We are open from 10 AM to 10 PM every day."
+        elif "location" in user_input_lower:
+            return "We are located at 123 Food Street, Flavor Town."
+        elif "reservation" in user_input_lower:
+            return "You can call us at (123) 456-7890 to make a reservation."
+        elif "specials" in user_input_lower:
+            return "Today's specials include the spicy Paneer Tikka and the refreshing Mango Lassi."
+        elif "allergies" in user_input_lower:
+            return "Please let us know about any allergies, and we will ensure that your meal is safe for you."
+        elif "price" in user_input_lower:
+            return ("Here are some prices:\n"
+                    "- Chilli Baby Corn: $12\n"
+                    "- Plain Dosa: $10\n"
+                    "- Masala Dosa: $13\n"
+                    "- Samosa Chaat: $9")
+        elif "contact" in user_input_lower:
+            return "You can contact us at (123) 456-7890 or email us at info@restaurant.com."
+        elif "thank you" in user_input_lower or "thanks" in user_input_lower:
+            return "You're welcome! If you have any other questions, feel free to ask."
+        
+        # Fallback to model-based response for general queries
         try:
             input_ids = self.tokenizer.encode(user_input + self.tokenizer.eos_token, return_tensors='pt')
-            print("Input IDs:", input_ids)  # Debugging
             bot_output = self.model.generate(input_ids, max_length=1000, pad_token_id=self.tokenizer.eos_token_id)
-            print("Bot Output:", bot_output)  # Debugging
             response = self.tokenizer.decode(bot_output[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
             return response
         except Exception as e:
