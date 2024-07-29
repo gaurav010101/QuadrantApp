@@ -4,13 +4,15 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class AI_Chatbot:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small", padding_side='left')  # Set padding side
+        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small", padding_side='left')
         self.model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
 
     def get_response(self, user_input):
         try:
             input_ids = self.tokenizer.encode(user_input + self.tokenizer.eos_token, return_tensors='pt')
+            print("Input IDs:", input_ids)  # Debugging
             bot_output = self.model.generate(input_ids, max_length=1000, pad_token_id=self.tokenizer.eos_token_id)
+            print("Bot Output:", bot_output)  # Debugging
             response = self.tokenizer.decode(bot_output[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
             return response
         except Exception as e:
