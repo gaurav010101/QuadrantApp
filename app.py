@@ -52,19 +52,21 @@ class AI_Chatbot:
 chatbot = AI_Chatbot()
 
 def main():
+    # Apply custom CSS to make the box red
     st.markdown(
         """
         <style>
-        .title {
+        .title-box {
             background-color: red;
             color: white;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 8px;
             text-align: center;
             font-size: 24px;
+            margin-bottom: 20px;
         }
         </style>
-        <div class="title">Mayuri Restaurant</div>
+        <div class="title-box">Mayuri Restaurant</div>
         """,
         unsafe_allow_html=True
     )
