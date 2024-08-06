@@ -52,7 +52,6 @@ class AI_Chatbot:
             return response
         except Exception as e:
             return f"Error: {str(e)}"
-
 def create_db():
     conn = sqlite3.connect('billing2.db')
     cursor = conn.cursor()
