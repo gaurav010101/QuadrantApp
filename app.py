@@ -90,6 +90,25 @@ def main():
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
+        .chatbox {
+            background-color: #f0f8ff; /* Alice blue */
+            border: 2px solid #1e90ff; /* Dodger blue */
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .user-input {
+            border: 2px solid #1e90ff; /* Dodger blue */
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .bot-response {
+            color: #1e90ff; /* Dodger blue */
+            font-size: 16px;
+        }
         </style>
         <div class="title-box">Mayuri Restaurant</div>
         """,
@@ -183,12 +202,16 @@ def main():
             unsafe_allow_html=True
         )
 
+    st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
+
     st.sidebar.header("Chat with AI")
-    user_input = st.sidebar.text_input("You")
+    user_input = st.sidebar.text_input("You", key="chat_input", placeholder="Type your message here...", help="Ask me anything!")
     if st.sidebar.button("Send"):
         if user_input:
             response = chatbot.get_response(user_input)
-            st.sidebar.write(f"**Bot:** {response}")
+            st.sidebar.markdown(f"<div class='bot-response'><strong>Bot:</strong> {response}</div>", unsafe_allow_html=True)
+
+    st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
