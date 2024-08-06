@@ -155,6 +155,7 @@ def main():
         unsafe_allow_html=True
     )
 
+    # Sidebar for customer details and chat
     st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
     
     st.sidebar.header("Customer Details")
@@ -188,6 +189,8 @@ def main():
     sev_puri = st.sidebar.number_input("Sev Puri - $9", min_value=0, key="sev_puri", help="Enter quantity")
     aloo_tiki = st.sidebar.number_input("Aloo Tiki - $9", min_value=0, key="aloo_tiki", help="Enter quantity")
     mirchi_chaat = st.sidebar.number_input("Mirchi Chaat - $9", min_value=0, key="mirchi_chaat", help="Enter quantity")
+
+    st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
     if st.sidebar.button("Generate Bill"):
         total_appetizers_price = (
@@ -242,15 +245,16 @@ def main():
 
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
+    # Main content area
     st.markdown('<div class="chatbox">', unsafe_allow_html=True)
     
     st.header("Chat with AI")
     
-    user_input = st.text_input("Type your message here...", key="user_input", placeholder="Ask something...", help="Type your query here")
+    user_input = st.sidebar.text_input("Type your message here...", key="user_input", placeholder="Ask something...", help="Type your query here")
 
-    if st.button("Send"):
+    if st.sidebar.button("Send"):
         response = chatbot.get_response(user_input)
-        st.markdown(f'<div class="bot-response">{response}</div>', unsafe_allow_html=True)
+        st.sidebar.markdown(f'<div class="bot-response">{response}</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
