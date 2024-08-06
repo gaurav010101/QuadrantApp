@@ -52,6 +52,7 @@ class AI_Chatbot:
             return response
         except Exception as e:
             return f"Error: {str(e)}"
+
 def create_db():
     conn = sqlite3.connect('billing2.db')
     cursor = conn.cursor()
@@ -201,91 +202,91 @@ def main():
     st.sidebar.header("Customer Details")
     c_name = st.sidebar.text_input("Customer Name", key="c_name", placeholder="Enter your name", help="Enter the customer's name")
     phone = st.sidebar.text_input("Phone Number", key="phone", placeholder="Enter phone number", help="Enter the phone number")
-    bill_no = st.sidebar.text_input("Order Number", value=str(random.randint(1000, 9999)), key="bill_no", help="Unique order number")
     
-    st.sidebar.header("Chat with Us!")
-    user_input = st.sidebar.text_input("Ask about our menu, specials, etc.", key="user_input", placeholder="Type your question here...", help="Ask any questions about the restaurant")
-    chatbot = AI_Chatbot()
+    st.sidebar.header("Chat with the AI Assistant")
+    user_input = st.sidebar.text_input("You: ", placeholder="Type your message here", key="user_input")
+    
+    if 'ai_chatbot' not in st.session_state:
+        st.session_state['ai_chatbot'] = AI_Chatbot()
+    
+    ai_chatbot = st.session_state['ai_chatbot']
+    
     if user_input:
-        response = chatbot.get_response(user_input)
-        st.sidebar.markdown(f'<div class="chatbox"><div class="bot-response">{response}</div></div>', unsafe_allow_html=True)
-
+        response = ai_chatbot.get_response(user_input)
+        st.sidebar.markdown(f'<div class="bot-response">Bot: {response}</div>', unsafe_allow_html=True)
+    
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
-    # Main content
+    # Billing section in the main page
     st.markdown('<div class="billing-box">', unsafe_allow_html=True)
+    st.header("Billing Details")
 
+    # Appetizers
     st.subheader("Appetizers")
-    chili_baby_corn = st.number_input("Chilli Baby Corn ($12)", min_value=0, step=1, key="chili_baby_corn")
-    chili_paneer = st.number_input("Chilli Paneer ($12)", min_value=0, step=1, key="chili_paneer")
-    chili_gobi = st.number_input("Chilli Gobi ($12)", min_value=0, step=1, key="chili_gobi")
-    gobi_manchurian = st.number_input("Gobi Manchurian ($12)", min_value=0, step=1, key="gobi_manchurian")
-    paneer_manchurian = st.number_input("Paneer Manchurian ($12)", min_value=0, step=1, key="paneer_manchurian")
-    paneer_65 = st.number_input("Paneer 65 ($12)", min_value=0, step=1, key="paneer_65")
-    paneer_kathi_roll = st.number_input("Paneer Kathi Roll ($12)", min_value=0, step=1, key="paneer_kathi_roll")
-    
+    chilli_baby_corn = st.number_input("Chilli Baby Corn", min_value=0, max_value=10, step=1)
+    chilli_paneer = st.number_input("Chilli Paneer", min_value=0, max_value=10, step=1)
+    chill_gobi = st.number_input("Chilli Gobi", min_value=0, max_value=10, step=1)
+    gobi_manchurian = st.number_input("Gobi Manchurian", min_value=0, max_value=10, step=1)
+    paneer_manchurian = st.number_input("Paneer Manchurian", min_value=0, max_value=10, step=1)
+    paneer_65 = st.number_input("Paneer 65", min_value=0, max_value=10, step=1)
+    paneer_kathi_roll = st.number_input("Paneer Kathi Roll", min_value=0, max_value=10, step=1)
+
+    # Main Dishes
     st.subheader("Main Dishes")
-    plain_ghee_dosa = st.number_input("Plain Ghee Dosa ($10)", min_value=0, step=1, key="plain_ghee_dosa")
-    podi_dosa = st.number_input("Podi Dosa ($11)", min_value=0, step=1, key="podi_dosa")
-    masala_dosa = st.number_input("Masala Dosa ($13)", min_value=0, step=1, key="masala_dosa")
-    podi_idli = st.number_input("Podi Idli ($10)", min_value=0, step=1, key="podi_idli")
-    idli_sambar = st.number_input("Idli Sambar ($9)", min_value=0, step=1, key="idli_sambar")
-    pongal = st.number_input("Pongal ($11)", min_value=0, step=1, key="pongal")
-    aloo_puri = st.number_input("Aloo Puri ($10)", min_value=0, step=1, key="aloo_puri")
-    
+    plain_ghee_dosa = st.number_input("Plain Ghee Dosa", min_value=0, max_value=10, step=1)
+    podi_dosa = st.number_input("Podi Dosa", min_value=0, max_value=10, step=1)
+    masala_dosa = st.number_input("Masala Dosa", min_value=0, max_value=10, step=1)
+    podi_idli = st.number_input("Podi Idli", min_value=0, max_value=10, step=1)
+    idli_sambar = st.number_input("Idli Sambar", min_value=0, max_value=10, step=1)
+    pongal = st.number_input("Pongal", min_value=0, max_value=10, step=1)
+    aloo_puri = st.number_input("Aloo Puri", min_value=0, max_value=10, step=1)
+
+    # Chaat & Pakoda
     st.subheader("Chaat & Pakoda")
-    samosa_chaat = st.number_input("Samosa Chaat ($9)", min_value=0, step=1, key="samosa_chaat")
-    papri_chaat = st.number_input("Papri Chaat ($9)", min_value=0, step=1, key="papri_chaat")
-    vada_pav = st.number_input("Vada Pav ($9)", min_value=0, step=1, key="vada_pav")
-    pani_puri = st.number_input("Pani Puri ($9)", min_value=0, step=1, key="pani_puri")
-    sev_puri = st.number_input("Sev Puri ($9)", min_value=0, step=1, key="sev_puri")
-    aloo_tiki = st.number_input("Aloo Tiki ($9)", min_value=0, step=1, key="aloo_tiki")
-    mirchi_chaat = st.number_input("Mirchi Chaat ($9)", min_value=0, step=1, key="mirchi_chaat")
+    samosa_chaat = st.number_input("Samosa Chaat", min_value=0, max_value=10, step=1)
+    papri_chaat = st.number_input("Papri Chaat", min_value=0, max_value=10, step=1)
+    vada_pav = st.number_input("Vada Pav", min_value=0, max_value=10, step=1)
+    pani_puri = st.number_input("Pani Puri", min_value=0, max_value=10, step=1)
+    sev_puri = st.number_input("Sev Puri", min_value=0, max_value=10, step=1)
+    aloo_tiki = st.number_input("Aloo Tiki", min_value=0, max_value=10, step=1)
+    mirchi_chaat = st.number_input("Mirchi Chaat", min_value=0, max_value=10, step=1)
 
-    if st.button("Generate Bill"):
-        appetizers_total = (chili_baby_corn + chili_paneer + chili_gobi + gobi_manchurian + paneer_manchurian + paneer_65 + paneer_kathi_roll) * 12
-        main_dishes_total = (plain_ghee_dosa * 10) + (podi_dosa * 11) + (masala_dosa * 13) + (podi_idli * 10) + (idli_sambar * 9) + (pongal * 11) + (aloo_puri * 10)
-        chaat_pakoda_total = (samosa_chaat + papri_chaat + vada_pav + pani_puri + sev_puri + aloo_tiki + mirchi_chaat) * 9
+    # Calculating total bill
+    appetizers_total = (chilli_baby_corn * 12 + chilli_paneer * 12 + chill_gobi * 12 + gobi_manchurian * 12 + 
+                        paneer_manchurian * 12 + paneer_65 * 12 + paneer_kathi_roll * 12)
+    main_dishes_total = (plain_ghee_dosa * 10 + podi_dosa * 10 + masala_dosa * 10 + podi_idli * 10 + 
+                         idli_sambar * 10 + pongal * 10 + aloo_puri * 10)
+    chaat_pakoda_total = (samosa_chaat * 9 + papri_chaat * 9 + vada_pav * 9 + pani_puri * 9 + sev_puri * 9 + 
+                          aloo_tiki * 9 + mirchi_chaat * 9)
 
-        appetizers_total_tax = appetizers_total * 0.0825
-        main_dishes_total_tax = main_dishes_total * 0.0825
-        chaat_pakoda_total_tax = chaat_pakoda_total * 0.0825
+    total_all = appetizers_total + main_dishes_total + chaat_pakoda_total
+    tax = total_all * 0.1
+    total_all_bil = total_all + tax
 
-        total_all_bil = appetizers_total + main_dishes_total + chaat_pakoda_total + appetizers_total_tax + main_dishes_total_tax + chaat_pakoda_total_tax
-
-        st.markdown('<div class="billing-summary">Billing Summary</div>', unsafe_allow_html=True)
-        
-        st.markdown(f'<div class="billing-item">Appetizers Total: ${appetizers_total:.2f}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="billing-item">Main Dishes Total: ${main_dishes_total:.2f}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="billing-item">Chaat & Pakoda Total: ${chaat_pakoda_total:.2f}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="billing-item">Appetizers Total with Tax: ${appetizers_total_tax:.2f}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="billing-item">Main Dishes Total with Tax: ${main_dishes_total_tax:.2f}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="billing-item">Chaat & Pakoda Total with Tax: ${chaat_pakoda_total_tax:.2f}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="billing-item">Total Bill: ${total_all_bil:.2f}</div>', unsafe_allow_html=True)
-
+    # Display billing summary
+    st.markdown('<div class="billing-summary">', unsafe_allow_html=True)
+    st.write(f"Appetizers Total: ${appetizers_total}")
+    st.write(f"Main Dishes Total: ${main_dishes_total}")
+    st.write(f"Chaat & Pakoda Total: ${chaat_pakoda_total}")
+    st.write(f"Tax: ${tax}")
+    st.write(f"Total Bill: ${total_all_bil}")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Save the billing information to the database
+    if st.button("Save Bill"):
+        create_db()
         conn = sqlite3.connect('billing2.db')
         cursor = conn.cursor()
-        
-        cursor.execute('''INSERT INTO bills (order_number, customer_name, phone_number, 
-                                              chilli_baby_corn, chilli_paneer, chill_gobi, gobi_manchurian, 
-                                              paneer_manchurian, paneer_65, paneer_kathi_roll, plain_ghee_dosa, 
-                                              podi_dosa, masala_dosa, podi_idli, idli_sambar, pongal, aloo_puri, 
-                                              samosa_chaat, papri_chaat, vada_pav, pani_puri, sev_puri, aloo_tiki, 
-                                              mirchi_chaat, appetizers_total, main_dishes_total, chaat_pakoda_total, 
-                                              appetizers_total_tax, main_dishes_total_tax, chaat_pakoda_total_tax, 
-                                              total_all_bil) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
-                        (bill_no, c_name, phone, chili_baby_corn, chili_paneer, chili_gobi, gobi_manchurian, 
-                         paneer_manchurian, paneer_65, paneer_kathi_roll, plain_ghee_dosa, podi_dosa, masala_dosa, 
-                         podi_idli, idli_sambar, pongal, aloo_puri, samosa_chaat, papri_chaat, vada_pav, pani_puri, 
-                         sev_puri, aloo_tiki, mirchi_chaat, appetizers_total, main_dishes_total, chaat_pakoda_total, 
-                         appetizers_total_tax, main_dishes_total_tax, chaat_pakoda_total_tax, total_all_bil))
-        
+        cursor.execute("INSERT INTO bills VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+                       (random.randint(1000, 9999), c_name, phone, chilli_baby_corn, chilli_paneer, chill_gobi, gobi_manchurian, paneer_manchurian, 
+                        paneer_65, paneer_kathi_roll, plain_ghee_dosa, podi_dosa, masala_dosa, podi_idli, idli_sambar, pongal, aloo_puri, samosa_chaat, 
+                        papri_chaat, vada_pav, pani_puri, sev_puri, aloo_tiki, mirchi_chaat, appetizers_total, main_dishes_total, chaat_pakoda_total, 
+                        appetizers_total * 0.1, main_dishes_total * 0.1, chaat_pakoda_total * 0.1, total_all_bil))
         conn.commit()
         conn.close()
-    
+        st.success("Bill saved successfully!")
+
     st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
-    create_db()
     main()
