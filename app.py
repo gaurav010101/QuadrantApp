@@ -52,34 +52,43 @@ class AI_Chatbot:
 chatbot = AI_Chatbot()
 
 def main():
-    # Apply custom CSS to make the title box red
+    # Apply custom CSS to style the app
     st.markdown(
         """
         <style>
         .title-box {
-            background-color: red;
+            background-color: #ff5733; /* Bright red-orange */
             color: white;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
         }
         .billing-box {
-            background-color: #f7f7f7;
-            border: 2px solid #ff6600;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff3e6; /* Soft peach */
+            border: 3px solid #ff5733; /* Bright red-orange */
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         }
         .billing-summary {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
+            color: #ff5733; /* Bright red-orange */
+            margin-bottom: 15px;
         }
         .billing-item {
-            font-size: 16px;
-            margin: 5px 0;
+            font-size: 18px;
+            margin: 8px 0;
+        }
+        .sidebar-content {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
         </style>
         <div class="title-box">Mayuri Restaurant</div>
@@ -87,6 +96,8 @@ def main():
         unsafe_allow_html=True
     )
 
+    st.sidebar.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
+    
     st.sidebar.header("Customer Details")
     c_name = st.sidebar.text_input("Customer Name")
     phone = st.sidebar.text_input("Phone Number")
@@ -118,6 +129,8 @@ def main():
     sev_puri = st.sidebar.number_input("Sev Puri - $9", min_value=0)
     aloo_tiki = st.sidebar.number_input("Aloo Tiki - $9", min_value=0)
     mirchi_chaat = st.sidebar.number_input("Mirchi Chaat - $9", min_value=0)
+
+    st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
     if st.sidebar.button("Generate Bill"):
         total_appetizers_price = (
