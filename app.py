@@ -57,87 +57,80 @@ def main():
         """
         <style>
         .title-box {
-            background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient background */
-            color: #fff;
-            padding: 20px;
-            border-radius: 20px;
+            background-color: #ff5733; /* Bright red-orange */
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
-            font-size: 32px;
-            margin-bottom: 40px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
-            animation: bounce 2s infinite;
+            font-size: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+            animation: pulsate 2s infinite;
         }
         .billing-box {
-            background: radial-gradient(circle, #fff3e6, #ffcccb); /* Radial gradient */
-            border: 5px double #ff5733; /* Double border */
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px 0;
-            box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.3);
-            animation: slideIn 1.5s ease-out;
-        }
-        .billing-summary {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff5733;
-            margin-bottom: 20px;
-        }
-        .billing-item {
-            font-size: 20px;
-            margin: 10px 0;
-        }
-        .sidebar-content {
-            background: linear-gradient(135deg, #f9d423, #ff4e50); /* Gradient background */
-            padding: 25px;
+            background-color: #fff3e6; /* Soft peach */
+            border: 3px solid #ff5733; /* Bright red-orange */
             border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         }
-        .chatbox {
-            background: linear-gradient(135deg, #ff6f61, #d57e7a); /* Gradient background */
-            border: 4px dashed #ffcc00; /* Dashed border */
-            border-radius: 25px;
-            padding: 30px;
-            margin-top: 25px;
-            box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.4);
-            animation: spin 3s linear infinite;
-        }
-        .user-input {
-            border: 3px solid #ffcc00; /* Bright yellow border */
-            border-radius: 15px;
-            padding: 15px;
-            font-size: 18px;
-            margin-bottom: 15px;
-            background-color: #fff;
-            transition: all 0.3s ease;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .user-input:focus {
-            border-color: #ff6f61; /* Focus border color */
-            box-shadow: 0 0 12px #ff6f61; /* Glow effect on focus */
-        }
-        .bot-response {
-            color: #ff6f61; /* Bright coral color */
+        .billing-summary {
             font-size: 20px;
             font-weight: bold;
-            background: linear-gradient(135deg, #fff, #f0f0f0); /* Gradient background */
-            border-left: 6px solid #ff6f61; /* Highlight border on the left */
+            color: #ff5733; /* Bright red-orange */
+            margin-bottom: 15px;
+        }
+        .billing-item {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+        .sidebar-content {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chatbox {
+            background: linear-gradient(135deg, #ffcc00, #ff3399); /* Gradient background */
+            border: 4px dashed #1e90ff; /* Dashed border */
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 2s ease-in-out;
+        }
+        .user-input {
+            border: 2px solid #1e90ff; /* Dodger blue */
+            border-radius: 10px;
             padding: 12px;
-            border-radius: 15px;
-            margin-top: 15px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            transition: all 0.3s ease;
         }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-30px); }
-            60% { transform: translateY(-15px); }
+        .user-input:focus {
+            border-color: #ff3399; /* Highlight border on focus */
+            box-shadow: 0 0 10px #ff3399; /* Glow effect on focus */
         }
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .bot-response {
+            color: #1e90ff; /* Dodger blue */
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #e6f7ff; /* Light blue background */
+            border-left: 4px solid #1e90ff; /* Highlight border on the left */
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         </style>
         <div class="title-box">Mayuri Restaurant</div>
@@ -165,12 +158,12 @@ def main():
     plain_ghee_dosa = st.sidebar.number_input("Plain Dosa/Ghee Dosa - $10", min_value=0)
     podi_dosa = st.sidebar.number_input("Podi Dosa - $13", min_value=0)
     masala_dosa = st.sidebar.number_input("Masala Dosa - $13", min_value=0)
-    podi_idli = st.sidebar.number_input("Podi Idli - $9", min_value=0)
-    idli_sambar = st.sidebar.number_input("Idli Sambar - $9", min_value=0)
+    podi_idli = st.sidebar.number_input("Podi Idli (3 pcs) - $9", min_value=0)
+    idli_sambar = st.sidebar.number_input("Idli Sambar (3 pcs) - $9", min_value=0)
     pongal = st.sidebar.number_input("Pongal - $10", min_value=0)
     aloo_puri = st.sidebar.number_input("Aloo Puri - $13", min_value=0)
 
-    st.sidebar.header("Chaat & Pakoda")
+    st.sidebar.header("Chaat and Pakoda")
     samosa_chaat = st.sidebar.number_input("Samosa Chaat - $9", min_value=0)
     papri_chaat = st.sidebar.number_input("Papri Chaat - $9", min_value=0)
     vada_pav = st.sidebar.number_input("Vada Pav - $8", min_value=0)
@@ -233,7 +226,7 @@ def main():
     st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
 
     st.sidebar.header("Chat with AI")
-    user_input = st.sidebar.text_input("You", key="chat_input", placeholder="Type your message here...", help="Ask me anything!", className="user-input")
+    user_input = st.sidebar.text_input("You", key="chat_input", placeholder="Type your message here...", help="Ask me anything!")
     if st.sidebar.button("Send"):
         if user_input:
             response = chatbot.get_response(user_input)
