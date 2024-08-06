@@ -44,12 +44,13 @@ class AI_Chatbot:
             input_ids = self.tokenizer.encode(user_input + self.tokenizer.eos_token, return_tensors='pt')
             bot_output = self.model.generate(input_ids, max_length=1000, pad_token_id=self.tokenizer.eos_token_id)
             response = self.tokenizer.decode(bot_output[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
+            
+            # Prevent repetitive responses
+            if response.strip() == "":
+                return "Sorry, I didn't understand that. Can you please ask something else?"
             return response
         except Exception as e:
             return f"Error: {str(e)}"
-
-# Create instance of the chatbot
-chatbot = AI_Chatbot()
 
 def main():
     # Apply custom CSS to style the app
@@ -257,4 +258,5 @@ def main():
         )
 
 if __name__ == "__main__":
+    chatbot = AI_Chatbot()
     main()
