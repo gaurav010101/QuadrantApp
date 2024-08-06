@@ -25,7 +25,7 @@ class AI_Chatbot:
             "contact": "You can contact us at (123) 456-7890 or email us at info@restaurant.com.",
             "thank you": "You're welcome! If you have any other questions, feel free to ask."
         }
-        self.vectorizer = TfidfVectorizer().fit_transform(self.menu_items)
+        self.vectorizer = TfidfVectorizer().fit(self.menu_items)
 
     def get_response(self, user_input):
         user_input_lower = user_input.lower()
@@ -36,7 +36,7 @@ class AI_Chatbot:
         
         # Find the closest menu item
         input_vector = self.vectorizer.transform([user_input])
-        cosine_similarities = cosine_similarity(input_vector, self.vectorizer).flatten()
+        cosine_similarities = cosine_similarity(input_vector, self.vectorizer.transform(self.menu_items)).flatten()
         highest_similarity_idx = cosine_similarities.argmax()
         
         if cosine_similarities[highest_similarity_idx] > 0.1:
