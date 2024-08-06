@@ -192,6 +192,18 @@ def main():
 
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
+    st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
+    
+    st.sidebar.header("Chat with AI")
+    
+    user_input = st.sidebar.text_input("Type your message here...", key="user_input", placeholder="Ask something...", help="Type your query here")
+
+    if st.sidebar.button("Send"):
+        response = chatbot.get_response(user_input)
+        st.sidebar.markdown(f'<div class="bot-response">{response}</div>', unsafe_allow_html=True)
+
+    st.sidebar.markdown('</div>', unsafe_allow_html=True)
+
     if st.sidebar.button("Generate Bill"):
         total_appetizers_price = (
             chilli_baby_corn * 12 +
@@ -225,7 +237,8 @@ def main():
         service_charge = 5
         total_bill = total_appetizers_price + total_main_dishes_price + total_chaat_pakoda_price + tax + service_charge
 
-        st.sidebar.markdown(
+        # Display Bill Summary below the Mayuri Restaurant Bar
+        st.markdown(
             f"""
             <div class="billing-box">
                 <div class="billing-summary">Bill Summary</div>
@@ -242,21 +255,6 @@ def main():
             """,
             unsafe_allow_html=True
         )
-
-    st.sidebar.markdown('</div>', unsafe_allow_html=True)
-
-    # Main content area
-    st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
-    
-    st.sidebar.header("Chat with AI")
-    
-    user_input = st.sidebar.text_input("Type your message here...", key="user_input", placeholder="Ask something...", help="Type your query here")
-
-    if st.sidebar.button("Send"):
-        response = chatbot.get_response(user_input)
-        st.sidebar.markdown(f'<div class="bot-response">{response}</div>', unsafe_allow_html=True)
-
-    st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
