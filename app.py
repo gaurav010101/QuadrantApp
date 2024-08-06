@@ -225,7 +225,7 @@ def main():
         service_charge = 5
         total_bill = total_appetizers_price + total_main_dishes_price + total_chaat_pakoda_price + tax + service_charge
 
-        st.markdown(
+        st.sidebar.markdown(
             f"""
             <div class="billing-box">
                 <div class="billing-summary">Bill Summary</div>
@@ -246,9 +246,9 @@ def main():
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
     # Main content area
-    st.markdown('<div class="chatbox">', unsafe_allow_html=True)
+    st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
     
-    st.header("Chat with AI")
+    st.sidebar.header("Chat with AI")
     
     user_input = st.sidebar.text_input("Type your message here...", key="user_input", placeholder="Ask something...", help="Type your query here")
 
@@ -256,7 +256,7 @@ def main():
         response = chatbot.get_response(user_input)
         st.sidebar.markdown(f'<div class="bot-response">{response}</div>', unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
