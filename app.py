@@ -1,43 +1,46 @@
 import streamlit as st
 import random
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 class AI_Chatbot:
     def __init__(self):
         self.tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small", padding_side='left')
         self.model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
+        self.menu_items = [
+            "Chilli Baby Corn", "Chilli Paneer", "Chilli Gobi", "Gobi Manchurian",
+            "Paneer Manchurian", "Paneer 65", "Paneer Kathi Roll", "Plain Dosa", 
+            "Masala Dosa", "Pongal", "Samosa Chaat", "Pani Puri", "Sev Puri"
+        ]
+        self.responses = {
+            "best dish": "The top-selling dish at our restaurant is the Masala Dosa. It's a favorite among our customers!",
+            "menu": "Here are some of our menu items:\n- Appetizers: Chilli Baby Corn, Chilli Paneer, Chilli Gobi, etc.\n- Main Dishes: Plain Dosa, Masala Dosa, Pongal, etc.\n- Chaat & Pakoda: Samosa Chaat, Pani Puri, Sev Puri, etc.",
+            "opening hours": "We are open from 10 AM to 10 PM every day.",
+            "location": "We are located at 123 Food Street, Flavor Town.",
+            "reservation": "You can call us at (123) 456-7890 to make a reservation.",
+            "specials": "Today's specials include the spicy Paneer Tikka and the refreshing Mango Lassi.",
+            "allergies": "Please let us know about any allergies, and we will ensure that your meal is safe for you.",
+            "price": "Here are some prices:\n- Chilli Baby Corn: $12\n- Plain Dosa: $10\n- Masala Dosa: $13\n- Samosa Chaat: $9",
+            "contact": "You can contact us at (123) 456-7890 or email us at info@restaurant.com.",
+            "thank you": "You're welcome! If you have any other questions, feel free to ask."
+        }
+        self.vectorizer = TfidfVectorizer().fit_transform(self.menu_items)
 
     def get_response(self, user_input):
         user_input_lower = user_input.lower()
         
-        # Predefined responses
-        if "best dish" in user_input_lower:
-            return "The top-selling dish at our restaurant is the Masala Dosa. It's a favorite among our customers!"
-        elif "menu" in user_input_lower:
-            return ("Here are some of our menu items:\n"
-                    "- Appetizers: Chilli Baby Corn, Chilli Paneer, Chilli Gobi, etc.\n"
-                    "- Main Dishes: Plain Dosa, Masala Dosa, Pongal, etc.\n"
-                    "- Chaat & Pakoda: Samosa Chaat, Pani Puri, Sev Puri, etc.")
-        elif "opening hours" in user_input_lower:
-            return "We are open from 10 AM to 10 PM every day."
-        elif "location" in user_input_lower:
-            return "We are located at 123 Food Street, Flavor Town."
-        elif "reservation" in user_input_lower:
-            return "You can call us at (123) 456-7890 to make a reservation."
-        elif "specials" in user_input_lower:
-            return "Today's specials include the spicy Paneer Tikka and the refreshing Mango Lassi."
-        elif "allergies" in user_input_lower:
-            return "Please let us know about any allergies, and we will ensure that your meal is safe for you."
-        elif "price" in user_input_lower:
-            return ("Here are some prices:\n"
-                    "- Chilli Baby Corn: $12\n"
-                    "- Plain Dosa: $10\n"
-                    "- Masala Dosa: $13\n"
-                    "- Samosa Chaat: $9")
-        elif "contact" in user_input_lower:
-            return "You can contact us at (123) 456-7890 or email us at info@restaurant.com."
-        elif "thank you" in user_input_lower or "thanks" in user_input_lower:
-            return "You're welcome! If you have any other questions, feel free to ask."
+        for key, response in self.responses.items():
+            if key in user_input_lower:
+                return response
+        
+        # Find the closest menu item
+        input_vector = self.vectorizer.transform([user_input])
+        cosine_similarities = cosine_similarity(input_vector, self.vectorizer).flatten()
+        highest_similarity_idx = cosine_similarities.argmax()
+        
+        if cosine_similarities[highest_similarity_idx] > 0.1:
+            return f"Our menu item closest to your query is: {self.menu_items[highest_similarity_idx]}"
         
         # Fallback to model-based response for general queries
         try:
