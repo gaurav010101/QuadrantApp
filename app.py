@@ -53,6 +53,7 @@ chatbot = AI_Chatbot()
 
 def main():
     st.title("Mayuri Billing Software")
+    st.image("https://via.placeholder.com/800x200.png?text=Mayuri+Restaurant", use_column_width=True)
 
     st.sidebar.header("Customer Details")
     c_name = st.sidebar.text_input("Customer Name")
@@ -136,6 +137,6 @@ def main():
         if user_input:
             response = chatbot.get_response(user_input)
             st.sidebar.write(f"**Bot:** {response}")
-
+  
 if __name__ == "__main__":
     main()
