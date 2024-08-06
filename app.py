@@ -226,7 +226,7 @@ def main():
     st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
 
     st.sidebar.header("Chat with AI")
-    user_input = st.sidebar.text_input("You", key="chat_input", placeholder="Type your message here...", help="Ask me anything!", className="user-input")
+    user_input = st.sidebar.text_input("You", key="chat_input", placeholder="Type your message here...", help="Ask me anything!")
     if st.sidebar.button("Send"):
         if user_input:
             response = chatbot.get_response(user_input)
