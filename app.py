@@ -65,6 +65,7 @@ def main():
             font-size: 28px;
             margin-bottom: 30px;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+            animation: pulsate 2s infinite;
         }
         .billing-box {
             background-color: #fff3e6; /* Soft peach */
@@ -91,23 +92,45 @@ def main():
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
         .chatbox {
-            background-color: #f0f8ff; /* Alice blue */
-            border: 2px solid #1e90ff; /* Dodger blue */
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #ffcc00, #ff3399); /* Gradient background */
+            border: 4px dashed #1e90ff; /* Dashed border */
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 2s ease-in-out;
         }
         .user-input {
             border: 2px solid #1e90ff; /* Dodger blue */
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 10px;
+            padding: 12px;
             font-size: 16px;
             margin-bottom: 10px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        .user-input:focus {
+            border-color: #ff3399; /* Highlight border on focus */
+            box-shadow: 0 0 10px #ff3399; /* Glow effect on focus */
         }
         .bot-response {
             color: #1e90ff; /* Dodger blue */
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #e6f7ff; /* Light blue background */
+            border-left: 4px solid #1e90ff; /* Highlight border on the left */
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         </style>
         <div class="title-box">Mayuri Restaurant</div>
@@ -148,8 +171,6 @@ def main():
     sev_puri = st.sidebar.number_input("Sev Puri - $9", min_value=0)
     aloo_tiki = st.sidebar.number_input("Aloo Tiki - $9", min_value=0)
     mirchi_chaat = st.sidebar.number_input("Mirchi Chaat - $9", min_value=0)
-
-    st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
     if st.sidebar.button("Generate Bill"):
         total_appetizers_price = (
@@ -205,7 +226,7 @@ def main():
     st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
 
     st.sidebar.header("Chat with AI")
-    user_input = st.sidebar.text_input("You", key="chat_input", placeholder="Type your message here...", help="Ask me anything!")
+    user_input = st.sidebar.text_input("You", key="chat_input", placeholder="Type your message here...", help="Ask me anything!", className="user-input")
     if st.sidebar.button("Send"):
         if user_input:
             response = chatbot.get_response(user_input)
