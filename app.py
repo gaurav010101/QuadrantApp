@@ -52,7 +52,7 @@ class AI_Chatbot:
 chatbot = AI_Chatbot()
 
 def main():
-    # Apply custom CSS to make the box red
+    # Apply custom CSS to make the title box red
     st.markdown(
         """
         <style>
@@ -64,6 +64,22 @@ def main():
             text-align: center;
             font-size: 24px;
             margin-bottom: 20px;
+        }
+        .billing-box {
+            background-color: #f7f7f7;
+            border: 2px solid #ff6600;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .billing-summary {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .billing-item {
+            font-size: 16px;
+            margin: 5px 0;
         }
         </style>
         <div class="title-box">Mayuri Restaurant</div>
@@ -136,16 +152,23 @@ def main():
         service_charge = 5
         total_bill = total_appetizers_price + total_main_dishes_price + total_chaat_pakoda_price + tax + service_charge
 
-        st.write("### Bill Summary")
-        st.write(f"**Bill Number:** {bill_no}")
-        st.write(f"**Customer Name:** {c_name}")
-        st.write(f"**Phone Number:** {phone}")
-        st.write(f"**Total Appetizers Price:** ${total_appetizers_price}")
-        st.write(f"**Total Main Dishes Price:** ${total_main_dishes_price}")
-        st.write(f"**Total Chaat & Pakoda Price:** ${total_chaat_pakoda_price}")
-        st.write(f"**Total Tax:** ${tax}")
-        st.write(f"**Service Charge:** ${service_charge}")
-        st.write(f"**Total Bill:** ${total_bill}")
+        st.markdown(
+            f"""
+            <div class="billing-box">
+                <div class="billing-summary">Bill Summary</div>
+                <div class="billing-item"><strong>Bill Number:</strong> {bill_no}</div>
+                <div class="billing-item"><strong>Customer Name:</strong> {c_name}</div>
+                <div class="billing-item"><strong>Phone Number:</strong> {phone}</div>
+                <div class="billing-item"><strong>Total Appetizers Price:</strong> ${total_appetizers_price}</div>
+                <div class="billing-item"><strong>Total Main Dishes Price:</strong> ${total_main_dishes_price}</div>
+                <div class="billing-item"><strong>Total Chaat & Pakoda Price:</strong> ${total_chaat_pakoda_price}</div>
+                <div class="billing-item"><strong>Total Tax:</strong> ${tax}</div>
+                <div class="billing-item"><strong>Service Charge:</strong> ${service_charge}</div>
+                <div class="billing-item"><strong>Total Bill:</strong> ${total_bill}</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
     st.sidebar.header("Chat with AI")
     user_input = st.sidebar.text_input("You")
