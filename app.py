@@ -15,7 +15,7 @@ class AI_Chatbot:
             "opening hours": "We are open from 10 AM to 10 PM every day.",
             "location": "We are located at 123 Food Street, Flavor Town.",
             "reservation": "You can call us at (123) 456-7890 to make a reservation.",
-            "specials": "Today's specials include the spicy Paneer Tikka and the refreshing Mango Lassi.",
+            "special": "Today's specials include the spicy Paneer 65 and chat masala.",
             "allergies": "Please let us know about any allergies, and we will ensure that your meal is safe for you.",
             "price": "Here are some prices:\n- Chilli Baby Corn: $12\n- Plain Dosa: $10\n- Masala Dosa: $13\n- Samosa Chaat: $9",
             "contact": "You can contact us at (123) 456-7890 or email us at info@restaurant.com.",
