@@ -281,11 +281,12 @@ def main():
     # Chatbot interaction
     chatbot = AI_Chatbot()
 
-    st.sidebar.header("Chat with Our Bot")
-    user_input = st.sidebar.text_input("Type your question here:")
-    if user_input:
-        response = chatbot.get_response(user_input)
-        st.sidebar.markdown(f"<div class='bot-response'>{response}</div>", unsafe_allow_html=True)
+    # Create a collapsible section for the chatbot
+    with st.expander("💬 Chat with Our Bot", expanded=False):
+        user_input = st.text_input("Type your question here:")
+        if user_input:
+            response = chatbot.get_response(user_input)
+            st.markdown(f"<div class='bot-response'>{response}</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
