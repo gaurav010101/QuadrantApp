@@ -202,7 +202,15 @@ def main():
     # Create and initialize the database
     create_db()
 
-    # Sidebar for user input
+    # Sidebar for chatbot
+    st.sidebar.header("Chat with Our Bot")
+    chatbot = AI_Chatbot()
+    user_input = st.sidebar.text_input("Type your question here:")
+    if user_input:
+        response = chatbot.get_response(user_input)
+        st.sidebar.markdown(f"<div class='bot-response'>{response}</div>", unsafe_allow_html=True)
+
+    # Right side of the app for menu
     st.sidebar.header("Customer Information")
     customer_name = st.sidebar.text_input("Customer Name")
     phone_number = st.sidebar.text_input("Phone Number")
@@ -265,7 +273,7 @@ def main():
         conn.close()
 
         # Display the bill
-        st.sidebar.markdown(
+        st.markdown(
             f"""
             <div class="billing-box">
             <div class="billing-summary">Bill Summary:</div>
@@ -278,15 +286,43 @@ def main():
             unsafe_allow_html=True
         )
 
-    # Chatbot interaction
-    chatbot = AI_Chatbot()
-
-    # Create a collapsible section for the chatbot
-    with st.expander("💬 Chat with Our Bot", expanded=False):
-        user_input = st.text_input("Type your question here:")
-        if user_input:
-            response = chatbot.get_response(user_input)
-            st.markdown(f"<div class='bot-response'>{response}</div>", unsafe_allow_html=True)
+    # Display the menu on the right side of the app
+    st.markdown(
+        """
+        <div class="section-title">Menu</div>
+        <div class="input-item">
+            <h4>Appetizers</h4>
+            <p>Chilli Baby Corn - $12</p>
+            <p>Chilli Paneer - $15</p>
+            <p>Chilli Gobi - $12</p>
+            <p>Gobi Manchurian - $14</p>
+            <p>Paneer Manchurian - $15</p>
+            <p>Paneer 65 - $16</p>
+            <p>Paneer Kathi Roll - $18</p>
+        </div>
+        <div class="input-item">
+            <h4>Main Dishes</h4>
+            <p>Plain Ghee Dosa - $10</p>
+            <p>Podi Dosa - $11</p>
+            <p>Masala Dosa - $13</p>
+            <p>Podi Idli - $9</p>
+            <p>Idli Sambar - $10</p>
+            <p>Pongal - $12</p>
+            <p>Aloo Puri - $11</p>
+        </div>
+        <div class="input-item">
+            <h4>Chaat & Pakoda</h4>
+            <p>Samosa Chaat - $9</p>
+            <p>Papri Chaat - $8</p>
+            <p>Vada Pav - $7</p>
+            <p>Pani Puri - $6</p>
+            <p>Sev Puri - $7</p>
+            <p>Aloo Tiki - $8</p>
+            <p>Mirchi Chaat - $9</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 if __name__ == "__main__":
     main()
