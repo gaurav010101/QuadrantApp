@@ -20,6 +20,7 @@ class AI_Chatbot:
             "price": "Here are some prices:\n- Chilli Baby Corn: $12\n- Plain Dosa: $10\n- Masala Dosa: $13\n- Samosa Chaat: $9",
             "contact": "You can contact us at (123) 456-7890 or email us at info@restaurant.com.",
             "thank you": "You're welcome! If you have any other questions, feel free to ask."
+            "what would you recommend with that": "The Gobi Manchurian goes great with the Masala dosa!"
         }
         self.vectorizer = TfidfVectorizer().fit(self.responses.keys())
 
