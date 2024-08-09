@@ -1,14 +1,14 @@
 import streamlit as st
 import random
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import BlenderbotSmallTokenizer, BlenderbotForConditionalGeneration
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import sqlite3
 
 class AI_Chatbot:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small", padding_side='left')
-        self.model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
+        self.tokenizer = BlenderbotSmallTokenizer.from_pretrained("facebook/blenderbot-400M-distill")
+        self.model = BlenderbotForConditionalGeneration.from_pretrained("facebook/blenderbot-400M-distill")
         self.responses = {
             "best dish": "The top-selling dish at our restaurant is the Masala Dosa. It's a favorite among our customers!",
             "menu": "Here are some of our menu items:\n- Appetizers: Chilli Baby Corn, Chilli Paneer, Chilli Gobi, etc.\n- Main Dishes: Plain Dosa, Masala Dosa, Pongal, etc.\n- Chaat & Pakoda: Samosa Chaat, Pani Puri, Sev Puri, etc.",
@@ -19,7 +19,8 @@ class AI_Chatbot:
             "allergies": "Please let us know about any allergies, and we will ensure that your meal is safe for you.",
             "price": "Here are some prices:\n- Chilli Baby Corn: $12\n- Plain Dosa: $10\n- Masala Dosa: $13\n- Samosa Chaat: $9",
             "contact": "You can contact us at (123) 456-7890 or email us at info@restaurant.com.",
-            "thank you": "You're welcome! If you have any other questions, feel free to ask."
+            "thank you": "You're welcome! If you have any other questions, feel free to ask.",
+            "what goes well with that": "The Gobi Manchurian goes great with the Masala Dosa! It is even recommended by this store's owner."
         }
         self.vectorizer = TfidfVectorizer().fit(self.responses.keys())
 
@@ -42,9 +43,9 @@ class AI_Chatbot:
 
         # Fallback to model-based response for general queries
         try:
-            input_ids = self.tokenizer.encode(user_input + self.tokenizer.eos_token, return_tensors='pt')
-            bot_output = self.model.generate(input_ids, max_length=1000, pad_token_id=self.tokenizer.eos_token_id)
-            response = self.tokenizer.decode(bot_output[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
+            input_ids = self.tokenizer.encode(user_input, return_tensors='pt')
+            bot_output = self.model.generate(input_ids, max_length=100)
+            response = self.tokenizer.decode(bot_output[0], skip_special_tokens=True)
             
             # Prevent repetitive responses
             if response.strip() == "":
@@ -201,92 +202,63 @@ def main():
     
     st.sidebar.header("Customer Details")
     c_name = st.sidebar.text_input("Customer Name", key="c_name", placeholder="Enter your name", help="Enter the customer's name")
-    phone = st.sidebar.text_input("Phone Number", key="phone", placeholder="Enter phone number", help="Enter the phone number")
+    phone = st.sidebar.text_input("Phone Number", key="phone", placeholder="Enter phone number", help="Enter the customer's phone number")
     
-    st.sidebar.header("Chat with the AI Assistant")
-    user_input = st.sidebar.text_input("You: ", placeholder="Type your message here", key="user_input")
+    st.sidebar.header("Chat with Our Bot")
+    st.sidebar.markdown('<div class="chatbox">', unsafe_allow_html=True)
     
-    if 'ai_chatbot' not in st.session_state:
-        st.session_state['ai_chatbot'] = AI_Chatbot()
-    
-    ai_chatbot = st.session_state['ai_chatbot']
+    user_input = st.sidebar.text_input("Ask a question", key="user_input", placeholder="Type your question here", help="Type a question to ask our chatbot")
+    chatbot = AI_Chatbot()
     
     if user_input:
-        response = ai_chatbot.get_response(user_input)
-        st.sidebar.markdown(f'<div class="bot-response">Bot: {response}</div>', unsafe_allow_html=True)
+        bot_response = chatbot.get_response(user_input)
+        st.sidebar.markdown(f'<div class="bot-response">{bot_response}</div>', unsafe_allow_html=True)
     
     st.sidebar.markdown('</div>', unsafe_allow_html=True)
+    st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
-    # Billing section in the main page
     st.markdown('<div class="billing-box">', unsafe_allow_html=True)
-    st.header("Billing Details")
-
-    # Appetizers
-    st.subheader("Appetizers")
-    chilli_baby_corn = st.number_input("Chilli Baby Corn", min_value=0, max_value=10, step=1)
-    chilli_paneer = st.number_input("Chilli Paneer", min_value=0, max_value=10, step=1)
-    chill_gobi = st.number_input("Chilli Gobi", min_value=0, max_value=10, step=1)
-    gobi_manchurian = st.number_input("Gobi Manchurian", min_value=0, max_value=10, step=1)
-    paneer_manchurian = st.number_input("Paneer Manchurian", min_value=0, max_value=10, step=1)
-    paneer_65 = st.number_input("Paneer 65", min_value=0, max_value=10, step=1)
-    paneer_kathi_roll = st.number_input("Paneer Kathi Roll", min_value=0, max_value=10, step=1)
-
-    # Main Dishes
-    st.subheader("Main Dishes")
-    plain_ghee_dosa = st.number_input("Plain Ghee Dosa", min_value=0, max_value=10, step=1)
-    podi_dosa = st.number_input("Podi Dosa", min_value=0, max_value=10, step=1)
-    masala_dosa = st.number_input("Masala Dosa", min_value=0, max_value=10, step=1)
-    podi_idli = st.number_input("Podi Idli", min_value=0, max_value=10, step=1)
-    idli_sambar = st.number_input("Idli Sambar", min_value=0, max_value=10, step=1)
-    pongal = st.number_input("Pongal", min_value=0, max_value=10, step=1)
-    aloo_puri = st.number_input("Aloo Puri", min_value=0, max_value=10, step=1)
-
-    # Chaat & Pakoda
-    st.subheader("Chaat & Pakoda")
-    samosa_chaat = st.number_input("Samosa Chaat", min_value=0, max_value=10, step=1)
-    papri_chaat = st.number_input("Papri Chaat", min_value=0, max_value=10, step=1)
-    vada_pav = st.number_input("Vada Pav", min_value=0, max_value=10, step=1)
-    pani_puri = st.number_input("Pani Puri", min_value=0, max_value=10, step=1)
-    sev_puri = st.number_input("Sev Puri", min_value=0, max_value=10, step=1)
-    aloo_tiki = st.number_input("Aloo Tiki", min_value=0, max_value=10, step=1)
-    mirchi_chaat = st.number_input("Mirchi Chaat", min_value=0, max_value=10, step=1)
-
-    # Calculating total bill
-    appetizers_total = (chilli_baby_corn * 12 + chilli_paneer * 12 + chill_gobi * 12 + gobi_manchurian * 12 + 
-                        paneer_manchurian * 12 + paneer_65 * 12 + paneer_kathi_roll * 12)
-    main_dishes_total = (plain_ghee_dosa * 10 + podi_dosa * 10 + masala_dosa * 10 + podi_idli * 10 + 
-                         idli_sambar * 10 + pongal * 10 + aloo_puri * 10)
-    chaat_pakoda_total = (samosa_chaat * 9 + papri_chaat * 9 + vada_pav * 9 + pani_puri * 9 + sev_puri * 9 + 
-                          aloo_tiki * 9 + mirchi_chaat * 9)
-
-    total_all = appetizers_total + main_dishes_total + chaat_pakoda_total
-    tax = total_all * 0.1
-    total_all_bil = total_all + tax
-
-    # Display billing summary
-    st.markdown('<div class="billing-summary">', unsafe_allow_html=True)
-    st.write(f"Appetizers Total: ${appetizers_total}")
-    st.write(f"Main Dishes Total: ${main_dishes_total}")
-    st.write(f"Chaat & Pakoda Total: ${chaat_pakoda_total}")
-    st.write(f"Tax: ${tax}")
-    st.write(f"Total Bill: ${total_all_bil}")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.header("Mayuri Restaurant Billing System")
     
-    # Save the billing information to the database
-    if st.button("Save Bill"):
-        create_db()
-        conn = sqlite3.connect('billing2.db')
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO bills VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-                       (random.randint(1000, 9999), c_name, phone, chilli_baby_corn, chilli_paneer, chill_gobi, gobi_manchurian, paneer_manchurian, 
-                        paneer_65, paneer_kathi_roll, plain_ghee_dosa, podi_dosa, masala_dosa, podi_idli, idli_sambar, pongal, aloo_puri, samosa_chaat, 
-                        papri_chaat, vada_pav, pani_puri, sev_puri, aloo_tiki, mirchi_chaat, appetizers_total, main_dishes_total, chaat_pakoda_total, 
-                        appetizers_total * 0.1, main_dishes_total * 0.1, chaat_pakoda_total * 0.1, total_all_bil))
-        conn.commit()
-        conn.close()
-        st.success("Bill saved successfully!")
-
+    # Billing section
+    appetizers = {
+        "Chilli Baby Corn": st.number_input("Chilli Baby Corn", min_value=0, max_value=10, key="chilli_baby_corn", step=1),
+        "Chilli Paneer": st.number_input("Chilli Paneer", min_value=0, max_value=10, key="chilli_paneer", step=1),
+        "Chilli Gobi": st.number_input("Chilli Gobi", min_value=0, max_value=10, key="chill_gobi", step=1),
+        "Gobi Manchurian": st.number_input("Gobi Manchurian", min_value=0, max_value=10, key="gobi_manchurian", step=1),
+        "Paneer Manchurian": st.number_input("Paneer Manchurian", min_value=0, max_value=10, key="paneer_manchurian", step=1),
+        "Paneer 65": st.number_input("Paneer 65", min_value=0, max_value=10, key="paneer_65", step=1),
+        "Paneer Kathi Roll": st.number_input("Paneer Kathi Roll", min_value=0, max_value=10, key="paneer_kathi_roll", step=1),
+    }
+    
+    main_dishes = {
+        "Plain Ghee Dosa": st.number_input("Plain Ghee Dosa", min_value=0, max_value=10, key="plain_ghee_dosa", step=1),
+        "Podi Dosa": st.number_input("Podi Dosa", min_value=0, max_value=10, key="podi_dosa", step=1),
+        "Masala Dosa": st.number_input("Masala Dosa", min_value=0, max_value=10, key="masala_dosa", step=1),
+        "Podi Idli": st.number_input("Podi Idli", min_value=0, max_value=10, key="podi_idli", step=1),
+        "Idli Sambar": st.number_input("Idli Sambar", min_value=0, max_value=10, key="idli_sambar", step=1),
+        "Pongal": st.number_input("Pongal", min_value=0, max_value=10, key="pongal", step=1),
+        "Aloo Puri": st.number_input("Aloo Puri", min_value=0, max_value=10, key="aloo_puri", step=1),
+    }
+    
+    chaat_pakoda = {
+        "Samosa Chaat": st.number_input("Samosa Chaat", min_value=0, max_value=10, key="samosa_chaat", step=1),
+        "Papri Chaat": st.number_input("Papri Chaat", min_value=0, max_value=10, key="papri_chaat", step=1),
+        "Vada Pav": st.number_input("Vada Pav", min_value=0, max_value=10, key="vada_pav", step=1),
+        "Pani Puri": st.number_input("Pani Puri", min_value=0, max_value=10, key="pani_puri", step=1),
+        "Sev Puri": st.number_input("Sev Puri", min_value=0, max_value=10, key="sev_puri", step=1),
+        "Aloo Tiki": st.number_input("Aloo Tiki", min_value=0, max_value=10, key="aloo_tiki", step=1),
+        "Mirchi Chaat": st.number_input("Mirchi Chaat", min_value=0, max_value=10, key="mirchi_chaat", step=1),
+    }
+    
+    st.markdown('<div class="billing-summary">Summary:</div>', unsafe_allow_html=True)
+    
+    st.markdown('<div class="billing-item">Appetizers Total: ${}</div>'.format(sum(appetizers.values()) * 10), unsafe_allow_html=True)
+    st.markdown('<div class="billing-item">Main Dishes Total: ${}</div>'.format(sum(main_dishes.values()) * 10), unsafe_allow_html=True)
+    st.markdown('<div class="billing-item">Chaat & Pakoda Total: ${}</div>'.format(sum(chaat_pakoda.values()) * 10), unsafe_allow_html=True)
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
+    create_db()
     main()
